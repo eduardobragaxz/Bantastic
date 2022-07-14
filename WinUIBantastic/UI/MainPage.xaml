@@ -1,0 +1,186 @@
+﻿<Page
+    x:Class="WinUIBantastic.UI.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"
+                        Margin="10,20,0,0">
+
+            <SplitButton Name="BtnAdd"
+                             HorizontalAlignment="Left"
+                             Margin="0,0,0,0"
+                             TabIndex="1"
+                             IsEnabled="False"
+                             Click="BtnAdd_Click">
+
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Add"/>
+                    <TextBlock Text="  Add"/>
+                </StackPanel>
+
+                <SplitButton.Flyout>
+                    <Flyout x:Name="AddButtonFlyout">
+                        <ListView x:Name="LVAddButton" SelectionChanged="AddButtonListView_SelectionChanged" SingleSelectionFollowsFocus="False">
+                            <ListViewItem Name="AddFlyoutToDo"
+                                              IsSelected="True"
+                                              Content="ToDo"/>
+
+                            <ListViewItem Name="AddFlyoutInProgress"
+                                              Content="In progress"/>
+
+                            <ListViewItem Name="AddFlyoutDone"
+                                              Content="Done"/>
+                        </ListView>
+                    </Flyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+
+            <SplitButton Name="BtnMove"
+                             HorizontalAlignment="Left"
+                             Margin="5"
+                             TabIndex="2"
+                             IsEnabled="False"
+                             Click="BtnMove_Click">
+
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Forward"/>
+                    <TextBlock Text="  Move"/>
+                </StackPanel>
+
+                <SplitButton.Flyout>
+                    <Flyout x:Name="MoveButtonFlyout">
+                        <ListView Name="MoveButtonListView"
+                                      SelectionChanged="MoveButtonListView_SelectionChanged">
+
+                            <ListViewItem Name="MoveFlyoutToDo"
+                                              Content="ToDo"/>
+
+                            <ListViewItem Name="MoveFlyoutInProgress"
+                                              IsSelected="true"
+                                              Content="In progress"/>
+
+                            <ListViewItem Name="MoveFlyoutDone"
+                                              Content="Done"/>
+                        </ListView>
+                    </Flyout>
+                </SplitButton.Flyout>
+            </SplitButton>
+            <AppBarSeparator Margin="10"/>
+
+            <Button Name="BtnErase"
+                        Margin="10"
+                        TabIndex="3"
+                        IsEnabled="False"
+                        Click="BtnErase_Click">
+
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Remove"/>
+                    <TextBlock Text="  Remove"/>
+                </StackPanel>
+            </Button>
+
+            <Button Name="BtnOptions"
+                        Margin="-5"
+                        TabIndex="4">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="More"/>
+                    <TextBlock Text="  Options"/>
+                </StackPanel>
+                <Button.Flyout>
+                    <MenuFlyout>
+                        <MenuFlyoutItem Name="BtnRefreshLists"
+                                            Icon="Refresh"
+                                            Text="Refresh all lists"
+                                            TabIndex="0"
+                                          Click="BtnRefreshLists_Click">
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutItem Name="BtnDeleteFile"
+                                            Icon="Delete"
+                                            Text="Delete file"
+                                            TabIndex="1"
+                                            Click="BtnDeleteFile_Click"/>
+
+                        <MenuFlyoutSeparator/>
+
+                        <MenuFlyoutItem Name="BtnSettings"
+                                            Icon="Setting"
+                                            Text="Settings"
+                                            TabIndex="2"
+                                            Click="BtnSettings_Click"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBox Name="TxtTaskInput"
+                 Height="30" 
+                 Width="600"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Top"
+                 Margin="150,10"
+                 TabIndex="0"
+                 PlaceholderText="Enter your task here"
+                 FontSize="15"
+                 KeyDown="TxtTaskInput_KeyDown"
+                 TextChanged="TxtTaskInput_TextChanged"/>
+        </StackPanel>
+        <RefreshContainer x:Name="LVTodoRefresh"
+                              Height="850"
+                              Width="450"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Margin="10,100,0,0"
+                              RefreshRequested="LVTodoRefresh_RefreshRequested">
+            <ListView Name="LVToDo" 
+                          Header="ToDo"
+                          BorderBrush="{ThemeResource SystemAccentColor}"
+                          BorderThickness="4"
+                          CornerRadius="5"
+                          SelectionChanged="LVToDo_SelectionChanged"
+                          SelectionMode="Extended"
+                          ItemsSource="{x:Bind UITodoList}"/>
+        </RefreshContainer>
+
+        <RefreshContainer Name="LVInProgressRefresh"
+                              Height="850"
+                              Width="450"
+                              HorizontalAlignment="Center"
+                              VerticalAlignment="top"
+                              Margin="10,100,0,0"
+                              RefreshRequested="LVInProgressRefresh_RefreshRequested">
+            <ListView Name="LVInProgress"
+                  Header="In progress"
+                  CornerRadius="5"
+                  BorderBrush="{ThemeResource SystemAccentColor}"
+                  BorderThickness="4"
+                  SelectionChanged="LVInProgress_SelectionChanged"
+                  SelectionMode="Extended"
+                  ItemsSource="{x:Bind UIInProgress}"/>
+        </RefreshContainer>
+
+        <RefreshContainer Name="LVDoneRefresh"
+                              Height="850"
+                              Width="450"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Top"
+                              Margin="0,100,10,0"
+                              RefreshRequested="LVDoneRefresh_RefreshRequested">
+
+            <ListView Name="LVDone"
+                          Header="Done"
+                          CornerRadius="5"
+                          BorderBrush="{ThemeResource SystemAccentColor}"
+                          BorderThickness="4"
+                          SelectionChanged="LVDone_SelectionChanged"
+                          SelectionMode="Extended"
+                          ItemsSource="{x:Bind UIDone}"/>
+
+        </RefreshContainer>
+    </Grid>
+</Page>
